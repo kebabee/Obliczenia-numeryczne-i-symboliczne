@@ -1,0 +1,7 @@
+(* 
+Narysuj mapę świata (rzut na globus) z konturami wszystkich krajów oraz konturem Polski na niebiesko. Niech centralnym punktem będzie Wrocław.
+*)
+
+g1 = Graphics[{Gray, EdgeForm[Black], CountryData[#, {"SchematicPolygon", {"LambertAzimuthal", CityData["Wrocław", "Coordinates"]}}] & /@ CountryData[]}];
+g2 = Graphics[{Gray, EdgeForm[Blue], CountryData["Poland", {"SchematicPolygon", {"LambertAzimuthal", CityData["Wrocław", "Coordinates"]}}]}];
+Show[g1, g2]
