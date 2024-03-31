@@ -1,0 +1,30 @@
+(*
+Rozważ wahadło podwójne. 
+Wykonaj symulacje ruchu wahadła przyjmując stosunek długości wahadeł jako 1:2 oraz stosunek mas 2:1
+*)
+
+eqns = {m1 * x1''[t] == (θ1[t] / l1) x1[t] - (θ2[t] / l2) (x2[t] - x1[t]),
+m1 * y1''[t] == (θ1[t] / l1) y1[t] - (θ2[t] / l2) (y2[t] - y1[t]) - m1 * g,
+m2 * x2''[t] == (θ2[t] / l2) (x2[t] - x1[t]),
+m2 * y2''[t] == (θ2[t] / l2) (y2[t] - y1[t]) - m2 * g};
+
+leqns = {x1[t]^2 + y1[t]^2 ⩵ l1^2, (x2[t] - x1[t])^2 + (y2[t] - y1[t])^2 == l2^2; (*długość wahadeł*)
+
+war = {x1[0] == 1, y1[0] == 0, y1'[0] == 0, x2[0] == 1, y2[0] == -2, y2'[0] == 0};
+
+params = {g → 9.81, m1 → 2, m2 → 1, l1 → 1, l2 → 2};
+
+soldp =
+First[ NDSolve[{eqns, leqns, war}/. params, {x1, y1, x2, y2, θ1, θ2}, {t, 0, 15},
+Method → {"IndexReduction" → {True, "ConstraintMethod" → "Projection"}}]];
+
+Manipulate[Graphics[{{{Red, Point[{x1[t], y1[t]}]},
+{Blue, Point[{x2[t], y2[t]}]}, Line[{{0, 0}, {x1[t], y1[t]}, {x2[t], y2[t]}}]}/. soldp},
+PlotRange → {{-3, 3}, {-3, 0}}], {t, 0, 10, 0.025}]
+
+frames = Table[
+Graphics[{{PointSize[.025], {Red, Point[{x1[t], y1[t]}]},
+{Blue, Point[{x2[t], y2[t]}]}, Line[{{0, 0}, {x1[t], y1[t]}, {x2[t], y2[t]}}]}/. soldp},
+PlotRange → {{-3, 3}, {-3, 0}}], {t, 1, 10, 0.05}];
+
+CloudExport[frames, "GIF"]
