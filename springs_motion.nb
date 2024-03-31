@@ -1,0 +1,15 @@
+(*
+  a) Wyznacz położenia i prędkości trzech odważników y1, y2 oraz y3 o tej samej masie M,
+  zawieszonych na trzech sprężynach o modułach Younga k1, k2 oraz k3.
+  b) Przyjmij odpowiednie wartości liczbowe i narysuj na jednym wykresie położenia w zależności od czasu.
+  c) Przyjmij odpowiednie wartości liczbowe i narysuj na jednym wykresie ruch odważników w przestrzeni fazowej
+*)
+
+eqs = {m * h''[t] == -k * h[t], h[0] == 0, h'[0] == 1} /. m → 1
+nsol1 = NDSolve[eqs /. k → 0.2, h, {t, 0, 20}]
+nsol2 = NDSolve[eqs /. k → 1, h, {t, 0, 20}]
+nsol3 = NDSolve[eqs /. k → 5, h, {t, 0, 20}]
+
+Plot[{h[t] /. nsol1, h[t] /. nsol2, h[t] /. nsol3}, {t, 0, 20}, ImageSize → Large, PlotLegends → {"k=0.2", "k=1", "k=5"}]
+
+ParametricPlot[{Evaluate[{h[t], h'[t]} /. nsol1], Evaluate[{h[t], h'[t] /. nsol2], Evaluate[{h[t], h'[t]} /. nsol3]}, {t, 0, 20}, PlotLegends → {"k=0.2", "k=1", "k=5"}]
